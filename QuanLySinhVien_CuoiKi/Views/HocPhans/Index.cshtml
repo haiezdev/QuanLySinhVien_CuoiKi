@@ -1,53 +1,54 @@
 ﻿@model IEnumerable<QuanLySinhVien_CuoiKi.Models.HocPhan>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QUẢN LÝ HỌC PHẦN";
 }
 
-<h1>Index</h1>
+<h1 class="title">THÊM MỚI HỌC PHẦN</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="buttoncuston" asp-action="Create">Thêm mới học phần</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TenHocPhan)
+                Tên học phần
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoTinChi)
+                Số tín chỉ
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaGvNavigation)
+                Mã giáo viên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaKhoaNavigation)
+                Khoa
             </th>
-            <th></th>
+            <th>Thao tác quản lý</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenHocPhan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoTinChi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaGvNavigation.MaGv)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaHocPhan">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaHocPhan">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaHocPhan">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenHocPhan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoTinChi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaGvNavigation.MaGv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaHocPhan">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-id="@item.MaHocPhan">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaHocPhan">Xoá</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
