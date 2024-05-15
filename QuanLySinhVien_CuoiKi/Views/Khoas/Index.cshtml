@@ -1,41 +1,42 @@
 ﻿@model IEnumerable<QuanLySinhVien_CuoiKi.Models.Khoa>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QUẢN LÝ KHOA";
 }
 
-<h1>Index</h1>
+<h1 class="title">QUẢN LÝ KHOA</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="buttoncuston" asp-action="Create">Thêm mới khoa</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TenKhoa)
+                Tên khoa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaTruongNavigation)
+                Trường
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenKhoa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaTruongNavigation.MaTruong)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaKhoa">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaKhoa">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaKhoa">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenKhoa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaTruongNavigation.MaTruong)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaKhoa">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-id="@item.MaKhoa">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaKhoa">Xoá</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
