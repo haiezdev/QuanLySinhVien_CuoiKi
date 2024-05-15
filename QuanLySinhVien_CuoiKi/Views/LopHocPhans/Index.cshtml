@@ -1,47 +1,53 @@
 ﻿@model IEnumerable<QuanLySinhVien_CuoiKi.Models.LopHocPhan>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QUẢN LÝ LỚP HỌC PHẦN";
 }
 
-<h1>Index</h1>
+<h1>QUẢN LÝ LỚP HỌC PHẦN</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a style="padding:5px;color: black; font-size: large;text-decoration: none; border:2px solid black" asp-action="Create">Thêm lớp học phần</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+
             <th>
-                @Html.DisplayNameFor(model => model.Diem)
+                Mã học phần
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaHocPhanNavigation)
+                Mã sinh viên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaSvNavigation)
+                Điểm
             </th>
-            <th></th>
+            <th>Thao tác quản lý</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Diem)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaHocPhanNavigation.MaHocPhan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaHocPhanNavigation.MaHocPhan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Diem)
+                </td>
+                <td>
+                   @*  <a asp-action="Edit" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Delete</a> *@
+                    <a asp-action="Edit" asp-route-maSv="@($"{item.MaSv}" )" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Edit</a> |
+                    <a asp-action="Details" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Details</a> |
+                    <a asp-action="Delete" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -25,10 +25,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(await quanLySinhVienCuoiKiContext.ToListAsync());
         }
 
-        // GET: LopHocPhans/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: LopHocPhans/Details?maSv=1&maHocPhan=2
+        public async Task<IActionResult> Details(string maSv, string maHocPhan)
         {
-            if (id == null)
+            if (maSv == null || maHocPhan == null)
             {
                 return NotFound();
             }
@@ -36,7 +36,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.MaHocPhanNavigation)
                 .Include(l => l.MaSvNavigation)
-                .FirstOrDefaultAsync(m => m.MaSv == id);
+                .FirstOrDefaultAsync(m => m.MaSv == maSv && m.MaHocPhan == maHocPhan);
             if (lopHocPhan == null)
             {
                 return NotFound();
@@ -54,8 +54,6 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         }
 
         // POST: LopHocPhans/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
@@ -71,15 +69,15 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
-        // GET: LopHocPhans/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        // GET: LopHocPhans/Edit?maSv=1&maHocPhan=2
+        public async Task<IActionResult> Edit(string maSv, string maHocPhan)
         {
-            if (id == null)
+            if (maSv == null || maHocPhan == null)
             {
                 return NotFound();
             }
 
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
+            var lopHocPhan = await _context.LopHocPhans.FindAsync(maSv, maHocPhan);
             if (lopHocPhan == null)
             {
                 return NotFound();
@@ -89,14 +87,12 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
-        // POST: LopHocPhans/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: LopHocPhans/Edit?maSv=1&maHocPhan=2
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
+        public async Task<IActionResult> Edit(string maSv, string maHocPhan, [Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
         {
-            if (id != lopHocPhan.MaSv)
+            if (maSv != lopHocPhan.MaSv || maHocPhan != lopHocPhan.MaHocPhan)
             {
                 return NotFound();
             }
@@ -110,7 +106,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LopHocPhanExists(lopHocPhan.MaSv))
+                    if (!LopHocPhanExists(lopHocPhan.MaSv, lopHocPhan.MaHocPhan))
                     {
                         return NotFound();
                     }
@@ -126,10 +122,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
-        // GET: LopHocPhans/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        // GET: LopHocPhans/Delete?maSv=1&maHocPhan=2
+        public async Task<IActionResult> Delete(string maSv, string maHocPhan)
         {
-            if (id == null)
+            if (maSv == null || maHocPhan == null)
             {
                 return NotFound();
             }
@@ -137,7 +133,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.MaHocPhanNavigation)
                 .Include(l => l.MaSvNavigation)
-                .FirstOrDefaultAsync(m => m.MaSv == id);
+                .FirstOrDefaultAsync(m => m.MaSv == maSv && m.MaHocPhan == maHocPhan);
             if (lopHocPhan == null)
             {
                 return NotFound();
@@ -146,12 +142,12 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
-        // POST: LopHocPhans/Delete/5
+        // POST: LopHocPhans/Delete?maSv=1&maHocPhan=2
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string maSv, string maHocPhan)
         {
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
+            var lopHocPhan = await _context.LopHocPhans.FindAsync(maSv, maHocPhan);
             if (lopHocPhan != null)
             {
                 _context.LopHocPhans.Remove(lopHocPhan);
@@ -161,9 +157,9 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LopHocPhanExists(string id)
+        private bool LopHocPhanExists(string maSv, string maHocPhan)
         {
-            return _context.LopHocPhans.Any(e => e.MaSv == id);
+            return _context.LopHocPhans.Any(e => e.MaSv == maSv && e.MaHocPhan == maHocPhan);
         }
     }
 }
