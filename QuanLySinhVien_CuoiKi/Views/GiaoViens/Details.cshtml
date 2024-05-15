@@ -1,17 +1,16 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.GiaoVien
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "CHI TIẾT GIÁO VIÊN";
 }
 
-<h1>Details</h1>
+<h1 class="title">CHI TIẾT GIÁO VIÊN</h1>
 
 <div>
-    <h4>GiaoVien</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenGv)
+            Họ và tên
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.TenGv)
@@ -23,19 +22,19 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SoDienThoai)
+            SĐT
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SoDienThoai)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BoMon)
+            Bộ môn
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.BoMon)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaKhoaNavigation)
+            Khoa
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MaKhoaNavigation.MaKhoa)
@@ -43,6 +42,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaGv">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="buttoncuston" asp-action="Edit" asp-route-id="@Model?.MaGv">Sửa</a>
+    <a class="buttoncuston" asp-action="Index">Trở về</a>
 </div>
