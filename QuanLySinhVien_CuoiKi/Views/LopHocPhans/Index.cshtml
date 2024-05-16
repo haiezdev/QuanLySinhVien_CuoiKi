@@ -4,10 +4,10 @@
     ViewData["Title"] = "QUẢN LÝ LỚP HỌC PHẦN";
 }
 
-<h1>QUẢN LÝ LỚP HỌC PHẦN</h1>
+<h1 class="title">QUẢN LÝ LỚP HỌC PHẦN</h1>
 
 <p>
-    <a style="padding:5px;color: black; font-size: large;text-decoration: none; border:2px solid black" asp-action="Create">Thêm lớp học phần</a>
+    <a  class="buttoncuston" asp-action="Create">Thêm mới lớp học phần</a>
 </p>
 <table class="table">
     <thead>
@@ -43,9 +43,9 @@
                    @*  <a asp-action="Edit" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Edit</a> |
                     <a asp-action="Details" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Details</a> |
                     <a asp-action="Delete" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Delete</a> *@
-                    <a asp-action="Edit" asp-route-maSv="@($"{item.MaSv}" )" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Edit</a> |
-                    <a asp-action="Details" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Details</a> |
-                    <a asp-action="Delete" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Delete</a>
+                    <a asp-action="Details" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-maSv="@($"{item.MaSv}" )" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Sửa</a> |
+                    <a asp-action="Delete" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Xoá</a>
                 </td>
             </tr>
         }

@@ -63,6 +63,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(hocPhan);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
