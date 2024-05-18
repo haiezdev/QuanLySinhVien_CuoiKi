@@ -17,13 +17,33 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         {
             _context = context;
         }
-
-        // GET: LopSinhHoats
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.LopSinhHoats.Include(l => l.MaKhoaNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<LopSinhHoat> lopSinhHoats = _context.LopSinhHoats.Include(h => h.MaKhoaNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                lopSinhHoats = lopSinhHoats.Where(s => s.MaLopSh.Contains(searchTerm) || s.TenLopSh.Contains(searchTerm) ||
+                                            s.MaKhoa.Contains(searchTerm));
+                int count = await lopSinhHoats.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(lopSinhHoats);
+        }
+
+        //// GET: LopSinhHoats
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.LopSinhHoats.Include(l => l.MaKhoaNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: LopSinhHoats/Details/5
         public async Task<IActionResult> Details(string id)
