@@ -18,12 +18,41 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: LopHocPhans
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.LopHocPhans.Include(l => l.MaHocPhanNavigation).Include(l => l.MaSvNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<LopHocPhan> lopHocPhans = _context.LopHocPhans
+                .Include(l => l.MaHocPhanNavigation)
+                .Include(l => l.MaSvNavigation);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                lopHocPhans = lopHocPhans.Where(l => l.Diem.ToString().Contains(searchTerm) ||
+                                                     l.MaHocPhan.Contains(searchTerm) ||
+                                                     l.MaSv.Contains(searchTerm));
+
+                int count = await lopHocPhans.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+
+            // Trả về kết quả tìm kiếm hoặc toàn bộ dữ liệu
+            return View(await lopHocPhans.ToListAsync());
+        }
+
+
+
+
+        //// GET: LopHocPhans
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.LopHocPhans.Include(l => l.MaHocPhanNavigation).Include(l => l.MaSvNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: LopHocPhans/Details?maSv=1&maHocPhan=2
         public async Task<IActionResult> Details(string maSv, string maHocPhan)

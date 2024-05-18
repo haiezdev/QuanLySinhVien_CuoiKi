@@ -6,9 +6,35 @@
 
 <h1 class="title">QUẢN LÝ LỚP SINH HOẠT</h1>
 
-<p>
-    <a class="buttoncuston" asp-action="Create">Thêm mới lớp sinh hoạt</a>
-</p>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <p style="margin: 0;">
+        <a class="buttoncuston" asp-action="Create">Thêm mới lớp sinh hoạt</a>
+    </p>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 40px;">
+        <form style="display: flex; align-items: center;" asp-action="TimKiem">
+            <div class="control" style="display: flex; align-items: center;">
+                <input name="searchTerm" placeholder="Tìm kiếm..." class="input" style="margin-right: 10px;">
+                <button class="button" style="margin-right: 10px;"><i class="mdi mdi-magnify"></i>Tìm kiếm</button>
+                <button asp-controller="LopSinhHoats" asp-action="Index" class="button">Làm mới</button>
+            </div>
+        </form>
+        @if (ViewBag.searchTerm != null)
+        {
+            if (ViewBag.Count == 0)
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Không có kết quả phù hợp</p>
+            }
+            else
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Có @ViewBag.Count kết quả tìm kiếm cho từ khoá "@ViewBag.searchTerm"</p>
+            }
+        }
+    </div>
+</div>
+
+
+
+
 <table class="table">
     <thead>
         <tr>
