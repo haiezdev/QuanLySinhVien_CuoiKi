@@ -13,9 +13,9 @@ namespace QuanLySinhVien_CuoiKi.Models
         }
         [Key]
         [Required(ErrorMessage = "Mã sinh viên là bắt buộc")]
-        //[StringLength(14, MinimumLength = 14, ErrorMessage = "Mã sinh viên phải có đúng 14 ký tự")]
-        [RegularExpression(@"^(2111)\d{10}$", ErrorMessage = "Mã sinh viên phải bắt đầu bằng 2111 và có 14 ký tự")]
-        [UniqueMaSv(ErrorMessage = "Mã sinh viên đã tồn tại.")]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "Mã sinh viên phải có đúng 14 ký tự")]
+        //[RegularExpression(@"^(2111)\d{10}$", ErrorMessage = "Mã sinh viên phải bắt đầu bằng 2111 và có 14 ký tự")]
+        //[UniqueMaSv(ErrorMessage = "Mã sinh viên đã tồn tại.")]
         public string MaSv { get; set; }
 
         [Required(ErrorMessage = "Tên sinh viên là bắt buộc")]

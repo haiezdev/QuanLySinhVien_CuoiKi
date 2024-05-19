@@ -84,23 +84,30 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // POST: SinhViens/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(sinhVien);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
+        //    return View(sinhVien);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
         {
-            foreach (var entry in ModelState)
+            if (_context.SinhViens.Any(s => s.MaSv == sinhVien.MaSv))
             {
-                Console.WriteLine($"Property: {entry.Key}");
-                var value = entry.Value.AttemptedValue;
-                Console.WriteLine($"Value: {value}");
+                ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
             }
-            foreach (var modelState in ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(sinhVien);
@@ -110,6 +117,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
             return View(sinhVien);
         }
+
 
         // GET: SinhViens/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -140,10 +148,20 @@ namespace QuanLySinhVien_CuoiKi.Controllers
                 return NotFound();
             }
 
+            // Kiểm tra mã sinh viên mới nếu nó thay đổi
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Kiểm tra nếu mã sinh viên đã tồn tại trong hệ thống và không phải là sinh viên hiện tại
+                    var existingSinhVien = await _context.SinhViens.AsNoTracking().FirstOrDefaultAsync(s => s.MaSv == sinhVien.MaSv);
+                    if (existingSinhVien != null && existingSinhVien.MaSv != id)
+                    {
+                        ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
+                        ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
+                        return View(sinhVien);
+                    }
+
                     _context.Update(sinhVien);
                     await _context.SaveChangesAsync();
                 }
@@ -163,6 +181,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
             return View(sinhVien);
         }
+
 
         // GET: SinhViens/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -202,5 +221,6 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         {
             return _context.SinhViens.Any(e => e.MaSv == id);
         }
+
     }
 }
