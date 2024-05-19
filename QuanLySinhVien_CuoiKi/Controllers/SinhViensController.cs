@@ -143,25 +143,29 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
         {
+
             if (id != sinhVien.MaSv)
             {
                 return NotFound();
             }
 
             // Kiểm tra mã sinh viên mới nếu nó thay đổi
+            var existingSinhVien = await _context.SinhViens.AsNoTracking().FirstOrDefaultAsync(s => s.MaSv == id);
+            if (existingSinhVien == null)
+            {
+                return NotFound();
+            }
+
+            if (existingSinhVien.MaSv != sinhVien.MaSv && _context.SinhViens.Any(s => s.MaSv == sinhVien.MaSv))
+            {
+                ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
+            }
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Kiểm tra nếu mã sinh viên đã tồn tại trong hệ thống và không phải là sinh viên hiện tại
-                    var existingSinhVien = await _context.SinhViens.AsNoTracking().FirstOrDefaultAsync(s => s.MaSv == sinhVien.MaSv);
-                    if (existingSinhVien != null && existingSinhVien.MaSv != id)
-                    {
-                        ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
-                        ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
-                        return View(sinhVien);
-                    }
-
                     _context.Update(sinhVien);
                     await _context.SaveChangesAsync();
                 }
@@ -181,7 +185,6 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
             return View(sinhVien);
         }
-
 
         // GET: SinhViens/Delete/5
         public async Task<IActionResult> Delete(string id)
