@@ -77,7 +77,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // GET: SinhViens/Create
         public IActionResult Create()
         {
-            ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh");
+            ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh");
             return View();
         }
 
@@ -88,13 +88,26 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
         {
+            foreach (var entry in ModelState)
+            {
+                Console.WriteLine($"Property: {entry.Key}");
+                var value = entry.Value.AttemptedValue;
+                Console.WriteLine($"Value: {value}");
+            }
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(sinhVien);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
+            ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
             return View(sinhVien);
         }
 
