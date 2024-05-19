@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySinhVien_CuoiKi.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuanLySinhVien_CuoiKi.Controllers
 {
@@ -18,12 +19,41 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: SinhViens
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.SinhViens.Include(s => s.MaLopShNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<SinhVien> sinhViens = _context.SinhViens.Include(h => h.MaLopShNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                sinhViens = sinhViens.Where(s => s.MaSv.Contains(searchTerm) ||
+                                  s.TenSv.Contains(searchTerm) ||
+                                  s.GioiTinh.Contains(searchTerm) ||
+                                  s.NgaySinh.Value.ToString() == searchTerm ||
+                                  s.Email.Contains(searchTerm) ||
+                                  s.SoDienThoai.Contains(searchTerm) ||
+                                  s.DiaChi.Contains(searchTerm) ||
+                                  s.MaLopSh.Contains(searchTerm));
+
+
+                int count = await sinhViens.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(sinhViens);
+        }
+
+        //// GET: SinhViens
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.SinhViens.Include(s => s.MaLopShNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: SinhViens/Details/5
         public async Task<IActionResult> Details(string id)
