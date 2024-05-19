@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@{
+    var session = Context.Session.GetString("UserId");
+}
+@{
+    var currentUrl = Context.Request.GetEncodedUrl();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,36 +26,53 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+               
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" style="font-weight: 600;
+                        @if (session != null)
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="" style="font-weight: 600;
     font-size: 23px;" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="SinhViens" asp-action="Index">Sinh viên</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="GiaoViens" asp-action="Index">Giáo viên</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="Khoas" asp-action="Index">Khoa</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="HocPhans" asp-action="Index">Học phần</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="LopSinhHoats" asp-action="Index">Lớp sinh hoạt</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" style="font-weight: 600;
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-weight: 600;
     font-size: 23px;" asp-area="" asp-controller="LopHocPhans" asp-action="Index">Lớp học phần</a>
-                        </li>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand btDNDX" style="color:white;font-weight: 600; font-size: 23px;" asp-area="" style="font-weight: 600;
+    font-size: 23px;" asp-controller="NguoiDung" asp-action="Logout">Đăng xuất</a>
+                            </li>
+                        }
+                        else if (!currentUrl.Contains("/NguoiDung/Login"))
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand btDNDX" style="color:white;font-weight: 600; font-size: 23px; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);" asp-area="" asp-controller="NguoiDung" asp-action="Login">Đăng nhập</a>
+                            </li>
+                        } else
+                        {
+                            
+                        }
 
 
                     </ul>

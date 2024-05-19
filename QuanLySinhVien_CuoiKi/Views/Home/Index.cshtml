@@ -1,11 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Trang chủ";
 }
+@{
+    var session = Context.Session.GetString("UserId");
+}
 
 <div class="text-center" style="background-color: #e0f7fa; padding: 40px;">
-    <h1 class="display-4" style="color: #00695c; font-weight: bold;">
-        Chào mừng bạn đến với hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
-    </h1>
+    @if (session != null)
+    {
+        <h1 class="display-4" style="color: #00695c; font-weight: bold;">
+            Chào mừng bạn đến với hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
+        </h1>
+    } else
+    {
+        <h1 class="display-4" style="color: #00695c; font-weight: bold;">
+            CHÚ Ý: Hãy đăng nhập để sử dụng <br /> hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
+        </h1>
+    }
+
     
 
 </div>

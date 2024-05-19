@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using QuanLySinhVien_CuoiKi.Models;
 namespace QuanLySinhVien_CuoiKi.Controllers
 {
-    public class AccountController : Controller
+    public class NguoiDungController : Controller
     {
-        private readonly YourDbContext _context;
+        private readonly QuanLySinhVienCuoiKiContext _context;
 
-        public AccountController(YourDbContext context)
+        public NguoiDungController(QuanLySinhVienCuoiKiContext context)
         {
             _context = context;
         }
@@ -17,12 +17,22 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        [HttpGet]
+        public IActionResult Logout()
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult Login(NguoiDung model)
+        {
+            var user = _context.NguoiDungs.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
             if (user != null)
             {
+                // Lưu thông tin người dùng vào session
+                HttpContext.Session.SetString("UserId", user.UserId.ToString());
+
                 // Đăng nhập thành công, thực hiện các hành động sau đây
                 // Ví dụ: Chuyển hướng đến trang chính sau khi đăng nhập thành công
                 return RedirectToAction("Index", "Home");
@@ -33,6 +43,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
                 return View(model);
             }
         }
-    }
 
+
+    }
 }
