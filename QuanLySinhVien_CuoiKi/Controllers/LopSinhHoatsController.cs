@@ -78,6 +78,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaLopSh,TenLopSh,MaKhoa")] LopSinhHoat lopSinhHoat)
         {
+            if (_context.LopSinhHoats.Any(s => s.MaLopSh == lopSinhHoat.MaLopSh))
+            {
+                ModelState.AddModelError("MaLopSh", "Mã lớp sinh hoạt đã tồn tại.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(lopSinhHoat);
@@ -108,6 +112,39 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // POST: LopSinhHoats/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(string id, [Bind("MaLopSh,TenLopSh,MaKhoa")] LopSinhHoat lopSinhHoat)
+        //{
+        //    if (id != lopSinhHoat.MaLopSh)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(lopSinhHoat);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!LopSinhHoatExists(lopSinhHoat.MaLopSh))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["MaKhoa"] = new SelectList(_context.Khoas, "MaKhoa", "MaKhoa", lopSinhHoat.MaKhoa);
+        //    return View(lopSinhHoat);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaLopSh,TenLopSh,MaKhoa")] LopSinhHoat lopSinhHoat)
@@ -115,6 +152,18 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             if (id != lopSinhHoat.MaLopSh)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã lớp sinh hoạt mới nếu nó thay đổi
+            var existingLopSinhHoat = await _context.LopSinhHoats.AsNoTracking().FirstOrDefaultAsync(l => l.MaLopSh == id);
+            if (existingLopSinhHoat == null)
+            {
+                return NotFound();
+            }
+
+            if (existingLopSinhHoat.MaLopSh != lopSinhHoat.MaLopSh && _context.LopSinhHoats.Any(l => l.MaLopSh == lopSinhHoat.MaLopSh))
+            {
+                ModelState.AddModelError("MaLopSh", "Mã lớp sinh hoạt đã tồn tại.");
             }
 
             if (ModelState.IsValid)
