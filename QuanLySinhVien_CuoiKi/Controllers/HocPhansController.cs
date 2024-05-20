@@ -83,6 +83,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaHocPhan,TenHocPhan,SoTinChi,MaGv,MaKhoa")] HocPhan hocPhan)
         {
+            if (_context.HocPhans.Any(s => s.MaHocPhan == hocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaHocPhan", "Mã học phần đã tồn tại.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(hocPhan);
@@ -123,6 +127,18 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             if (id != hocPhan.MaHocPhan)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã học phần mới nếu nó thay đổi
+            var existingHocPhan = await _context.HocPhans.AsNoTracking().FirstOrDefaultAsync(h => h.MaHocPhan == id);
+            if (existingHocPhan == null)
+            {
+                return NotFound();
+            }
+
+            if (existingHocPhan.MaHocPhan != hocPhan.MaHocPhan && _context.HocPhans.Any(h => h.MaHocPhan == hocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaHocPhan", "Mã học phần đã tồn tại.");
             }
 
             if (ModelState.IsValid)
