@@ -45,6 +45,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
+
         // GET: LopHocPhans/Create
         public IActionResult Create()
         {
@@ -58,6 +59,14 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
         {
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(lopHocPhan);
@@ -68,6 +77,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaSv"] = new SelectList(_context.SinhViens, "MaSv", "MaSv", lopHocPhan.MaSv);
             return View(lopHocPhan);
         }
+
 
         // GET: LopHocPhans/Edit?maSv=1&maHocPhan=2
         public async Task<IActionResult> Edit(string maSv, string maHocPhan)

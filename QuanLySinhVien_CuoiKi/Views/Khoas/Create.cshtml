@@ -1,41 +1,41 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.Khoa
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "QUẢN LÝ KHOA";
 }
 
-<h1>Create</h1>
+<h1 class="title">THÊM MỚI KHOA</h1>
 
-<h4>Khoa</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MaKhoa" class="control-label"></label>
+                <label asp-for="MaKhoa" class="control-label">Mã khoa</label>
                 <input asp-for="MaKhoa" class="form-control" />
                 <span asp-validation-for="MaKhoa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TenKhoa" class="control-label"></label>
+                <label asp-for="TenKhoa" class="control-label">Tên khoa</label>
                 <input asp-for="TenKhoa" class="form-control" />
                 <span asp-validation-for="TenKhoa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaTruong" class="control-label"></label>
+                <label asp-for="MaTruong" class="control-label">Trường</label>
                 <select asp-for="MaTruong" class ="form-control" asp-items="ViewBag.MaTruong"></select>
+            </div>       
+            <div class="btsubmit">
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                    <a class="buttoncuston" asp-action="Index">Trở vế</a>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
