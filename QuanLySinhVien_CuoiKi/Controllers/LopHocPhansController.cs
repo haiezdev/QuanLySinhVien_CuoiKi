@@ -95,6 +95,11 @@ namespace QuanLySinhVien_CuoiKi.Controllers
                     Console.WriteLine(error.ErrorMessage);
                 }
             }
+            
+            if (_context.LopHocPhans.Any(l => l.MaSv == lopHocPhan.MaSv && l.MaHocPhan == lopHocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("Diem", "Sinh viên đã đăng ký học phần này.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -131,9 +136,37 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string maSv, string maHocPhan, [Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
         {
+
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+            foreach (var entry in ModelState)
+            {
+                Console.WriteLine($"Property: {entry.Key}");
+                var value = entry.Value.AttemptedValue;
+                Console.WriteLine($"Value: {value}");
+            }
             if (maSv != lopHocPhan.MaSv || maHocPhan != lopHocPhan.MaHocPhan)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã sinh viên và mã học phần mới nếu nó thay đổi
+            var existingLopHocPhan = await _context.LopHocPhans.AsNoTracking().FirstOrDefaultAsync(l => l.MaSv == maSv && l.MaHocPhan == maHocPhan);
+           
+            if (existingLopHocPhan == null)
+            {
+                return NotFound();
+            }
+
+            if ((existingLopHocPhan.MaSv != lopHocPhan.MaSv || existingLopHocPhan.MaHocPhan != lopHocPhan.MaHocPhan) &&
+                _context.LopHocPhans.Any(l => l.MaSv == lopHocPhan.MaSv && l.MaHocPhan == lopHocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaSv", "Mã sinh viên và mã học phần đã tồn tại.");
             }
 
             if (ModelState.IsValid)
@@ -160,6 +193,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaSv"] = new SelectList(_context.SinhViens, "MaSv", "MaSv", lopHocPhan.MaSv);
             return View(lopHocPhan);
         }
+   
 
         // GET: LopHocPhans/Delete?maSv=1&maHocPhan=2
         public async Task<IActionResult> Delete(string maSv, string maHocPhan)
