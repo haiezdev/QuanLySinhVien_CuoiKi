@@ -1,59 +1,60 @@
 ﻿@model IEnumerable<QuanLySinhVien_CuoiKi.Models.GiaoVien>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QUẢN LÝ GIÁO VIÊN";
 }
 
-<h1>Index</h1>
+<h1 class="title">QUẢN LÝ GIÁO VIÊN</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="buttoncuston" asp-action="Create">Thêm mới giáo viên</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TenGv)
+                Họ và tên
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoDienThoai)
+                SĐT
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BoMon)
+                Bộ môn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaKhoaNavigation)
+                Khoa
             </th>
-            <th></th>
+            <th>Thao tác quản lý</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenGv)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoDienThoai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BoMon)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaGv">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaGv">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaGv">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenGv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoDienThoai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BoMon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaGv">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-id="@item.MaGv">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaGv">Xoá</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
