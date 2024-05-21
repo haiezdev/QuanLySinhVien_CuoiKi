@@ -1,0 +1,23 @@
+﻿.row {
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+}
+
+.text-danger  {
+    margin: 2px;
+}
+
+.btsubmit {
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+}
