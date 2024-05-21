@@ -18,12 +18,34 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: HocPhans
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.HocPhans.Include(h => h.MaGvNavigation).Include(h => h.MaKhoaNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<HocPhan> hocPhans = _context.HocPhans.Include(h => h.MaKhoaNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                hocPhans = hocPhans.Where(s => s.MaHocPhan.Contains(searchTerm) || s.TenHocPhan.Contains(searchTerm) ||
+                                            s.SoTinChi.ToString().Contains(searchTerm) ||
+                                            s.MaGv.Contains(searchTerm) || s.MaKhoa.Contains(searchTerm) ||
+                                            s.MaKhoa.Contains(searchTerm));
+                int count = await hocPhans.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(hocPhans);
+        }
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.HocPhans.Include(h => h.MaGvNavigation).Include(h => h.MaKhoaNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: HocPhans/Details/5
         public async Task<IActionResult> Details(string id)
@@ -44,6 +66,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
 
             return View(hocPhan);
         }
+
 
         // GET: HocPhans/Create
         public IActionResult Create()
