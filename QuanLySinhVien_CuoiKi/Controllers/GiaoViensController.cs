@@ -18,11 +18,27 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: GiaoViens
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.GiaoViens.Include(g => g.MaKhoaNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
+        }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<GiaoVien> giaoViens = _context.GiaoViens.Include(gv => gv.MaKhoaNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+               
+                giaoViens = giaoViens.Where(s => s.MaGv.Contains(searchTerm) || s.TenGv.Contains(searchTerm) ||
+                                            s.Email.Contains(searchTerm) ||
+                                            s.SoDienThoai.Contains(searchTerm) || s.BoMon.Contains(searchTerm) ||
+                                            s.MaKhoa.Contains(searchTerm));
+                int count = await giaoViens.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(giaoViens);
         }
 
         // GET: GiaoViens/Details/5
