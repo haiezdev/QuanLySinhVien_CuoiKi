@@ -1,51 +1,51 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.HocPhan
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "QUẢN LÝ HỌC PHẦN";
 }
 
-<h1>Create</h1>
-
-<h4>HocPhan</h4>
+<h1 class="title">THÊM MỚI HỌC PHẦN</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MaHocPhan" class="control-label"></label>
+                <label asp-for="MaHocPhan" class="control-label">Mã học phần</label>
                 <input asp-for="MaHocPhan" class="form-control" />
                 <span asp-validation-for="MaHocPhan" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TenHocPhan" class="control-label"></label>
+                <label asp-for="TenHocPhan" class="control-label">Tên học phần</label>
                 <input asp-for="TenHocPhan" class="form-control" />
                 <span asp-validation-for="TenHocPhan" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SoTinChi" class="control-label"></label>
+                <label asp-for="SoTinChi" class="control-label">Số tín chỉ</label>
                 <input asp-for="SoTinChi" class="form-control" />
                 <span asp-validation-for="SoTinChi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaGv" class="control-label"></label>
-                <select asp-for="MaGv" class ="form-control" asp-items="ViewBag.MaGv"></select>
+                <label asp-for="MaGv" class="control-label">Mã giáo viên</label>
+                <select asp-for="MaGv" class="form-control" asp-items="ViewBag.MaGv"></select>
             </div>
             <div class="form-group">
-                <label asp-for="MaKhoa" class="control-label"></label>
-                <select asp-for="MaKhoa" class ="form-control" asp-items="ViewBag.MaKhoa"></select>
+                <label asp-for="MaKhoa" class="control-label">Khoa</label>
+                <select asp-for="MaKhoa" class="form-control" asp-items="ViewBag.MaKhoa"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="btsubmit">
+                <div class="form-group">
+                    <input type="submit" value="Thêm" class="btn btn-primary" />
+                    <a class="buttoncuston" asp-action="Index">Trở về</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
