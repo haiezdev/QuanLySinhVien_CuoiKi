@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySinhVien_CuoiKi.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuanLySinhVien_CuoiKi.Controllers
 {
@@ -18,12 +19,41 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: SinhViens
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.SinhViens.Include(s => s.MaLopShNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<SinhVien> sinhViens = _context.SinhViens.Include(h => h.MaLopShNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                sinhViens = sinhViens.Where(s => s.MaSv.Contains(searchTerm) ||
+                                  s.TenSv.Contains(searchTerm) ||
+                                  s.GioiTinh.Contains(searchTerm) ||
+                                  s.NgaySinh.Value.ToString() == searchTerm ||
+                                  s.Email.Contains(searchTerm) ||
+                                  s.SoDienThoai.Contains(searchTerm) ||
+                                  s.DiaChi.Contains(searchTerm) ||
+                                  s.MaLopSh.Contains(searchTerm));
+
+
+                int count = await sinhViens.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(sinhViens);
+        }
+
+        //// GET: SinhViens
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.SinhViens.Include(s => s.MaLopShNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: SinhViens/Details/5
         public async Task<IActionResult> Details(string id)
@@ -47,26 +77,47 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // GET: SinhViens/Create
         public IActionResult Create()
         {
-            ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh");
+            ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh");
             return View();
         }
 
         // POST: SinhViens/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(sinhVien);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
+        //    return View(sinhVien);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
         {
+            if (_context.SinhViens.Any(s => s.MaSv == sinhVien.MaSv))
+            {
+                ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(sinhVien);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaLopSh"] = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
+            ViewBag.MaLopSh = new SelectList(_context.LopSinhHoats, "MaLopSh", "MaLopSh", sinhVien.MaLopSh);
             return View(sinhVien);
         }
+
 
         // GET: SinhViens/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -92,10 +143,24 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaSv,TenSv,NgaySinh,GioiTinh,Email,SoDienThoai,DiaChi,MaLopSh")] SinhVien sinhVien)
         {
+
             if (id != sinhVien.MaSv)
             {
                 return NotFound();
             }
+
+            // Kiểm tra mã sinh viên mới nếu nó thay đổi
+            var existingSinhVien = await _context.SinhViens.AsNoTracking().FirstOrDefaultAsync(s => s.MaSv == id);
+            if (existingSinhVien == null)
+            {
+                return NotFound();
+            }
+
+            if (existingSinhVien.MaSv != sinhVien.MaSv && _context.SinhViens.Any(s => s.MaSv == sinhVien.MaSv))
+            {
+                ModelState.AddModelError("MaSv", "Mã sinh viên đã tồn tại.");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -159,5 +224,6 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         {
             return _context.SinhViens.Any(e => e.MaSv == id);
         }
+
     }
 }

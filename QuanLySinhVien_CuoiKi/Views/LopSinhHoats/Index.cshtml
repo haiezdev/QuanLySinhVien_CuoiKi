@@ -39,6 +39,9 @@
     <thead>
         <tr>
             <th>
+                Mã lớp sinh hoạt
+            </th>
+            <th>
                 Tên lớp sinh hoạt
             </th>
             <th>
@@ -51,6 +54,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaLopSh)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TenLopSh)
                 </td>

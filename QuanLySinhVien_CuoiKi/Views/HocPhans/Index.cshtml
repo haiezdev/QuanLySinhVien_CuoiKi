@@ -36,6 +36,9 @@
     <thead>
         <tr>
             <th>
+                Mã học phần
+            </th>
+            <th>
                 Tên học phần
             </th>
             <th>
@@ -55,13 +58,16 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.MaHocPhan)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.TenHocPhan)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SoTinChi)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MaGvNavigation.MaGv)
+                    @Html.DisplayFor(modelItem => item.MaGv)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)

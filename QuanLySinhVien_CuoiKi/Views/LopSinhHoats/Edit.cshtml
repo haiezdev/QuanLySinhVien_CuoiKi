@@ -13,6 +13,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MaLopSh" />
             <div class="form-group">
+                <label asp-for="MaLopSh" class="control-label">Mã lớp sinh hoạt</label>
+                <input asp-for="MaLopSh" class="form-control" readonly />
+                <span asp-validation-for="MaLopSh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="TenLopSh" class="control-label">Tên lớp sinh hoạt</label>
                 <input asp-for="TenLopSh" class="form-control" />
                 <span asp-validation-for="TenLopSh" class="text-danger"></span>
