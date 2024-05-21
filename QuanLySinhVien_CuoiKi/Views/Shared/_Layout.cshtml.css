@@ -49,10 +49,14 @@ button.accept-policy {
   line-height: 60px;
 }
 .logo {
-    width: 191px;
+    width: 100px;
     height: 100px;
 }
 .nav-link .text-dark {
     font-weight: 700;
     font-size: 25px;
+}
+
+.container-fluid {
+    background-color: #e0f7fa;
 }

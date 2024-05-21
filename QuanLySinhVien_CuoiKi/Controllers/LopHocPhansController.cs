@@ -18,12 +18,41 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: LopHocPhans
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.LopHocPhans.Include(l => l.MaHocPhanNavigation).Include(l => l.MaSvNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<LopHocPhan> lopHocPhans = _context.LopHocPhans
+                .Include(l => l.MaHocPhanNavigation)
+                .Include(l => l.MaSvNavigation);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                lopHocPhans = lopHocPhans.Where(l => l.Diem.ToString().Contains(searchTerm) ||
+                                                     l.MaHocPhan.Contains(searchTerm) ||
+                                                     l.MaSv.Contains(searchTerm));
+
+                int count = await lopHocPhans.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+
+            // Trả về kết quả tìm kiếm hoặc toàn bộ dữ liệu
+            return View(await lopHocPhans.ToListAsync());
+        }
+
+
+
+
+        //// GET: LopHocPhans
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.LopHocPhans.Include(l => l.MaHocPhanNavigation).Include(l => l.MaSvNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: LopHocPhans/Details?maSv=1&maHocPhan=2
         public async Task<IActionResult> Details(string maSv, string maHocPhan)
@@ -45,6 +74,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(lopHocPhan);
         }
 
+
         // GET: LopHocPhans/Create
         public IActionResult Create()
         {
@@ -58,6 +88,19 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
         {
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+            
+            if (_context.LopHocPhans.Any(l => l.MaSv == lopHocPhan.MaSv && l.MaHocPhan == lopHocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("Diem", "Sinh viên đã đăng ký học phần này.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(lopHocPhan);
@@ -68,6 +111,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaSv"] = new SelectList(_context.SinhViens, "MaSv", "MaSv", lopHocPhan.MaSv);
             return View(lopHocPhan);
         }
+
 
         // GET: LopHocPhans/Edit?maSv=1&maHocPhan=2
         public async Task<IActionResult> Edit(string maSv, string maHocPhan)
@@ -92,9 +136,37 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string maSv, string maHocPhan, [Bind("MaSv,MaHocPhan,Diem")] LopHocPhan lopHocPhan)
         {
+
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+            foreach (var entry in ModelState)
+            {
+                Console.WriteLine($"Property: {entry.Key}");
+                var value = entry.Value.AttemptedValue;
+                Console.WriteLine($"Value: {value}");
+            }
             if (maSv != lopHocPhan.MaSv || maHocPhan != lopHocPhan.MaHocPhan)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã sinh viên và mã học phần mới nếu nó thay đổi
+            var existingLopHocPhan = await _context.LopHocPhans.AsNoTracking().FirstOrDefaultAsync(l => l.MaSv == maSv && l.MaHocPhan == maHocPhan);
+           
+            if (existingLopHocPhan == null)
+            {
+                return NotFound();
+            }
+
+            if ((existingLopHocPhan.MaSv != lopHocPhan.MaSv || existingLopHocPhan.MaHocPhan != lopHocPhan.MaHocPhan) &&
+                _context.LopHocPhans.Any(l => l.MaSv == lopHocPhan.MaSv && l.MaHocPhan == lopHocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaSv", "Mã sinh viên và mã học phần đã tồn tại.");
             }
 
             if (ModelState.IsValid)
@@ -121,6 +193,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             ViewData["MaSv"] = new SelectList(_context.SinhViens, "MaSv", "MaSv", lopHocPhan.MaSv);
             return View(lopHocPhan);
         }
+   
 
         // GET: LopHocPhans/Delete?maSv=1&maHocPhan=2
         public async Task<IActionResult> Delete(string maSv, string maHocPhan)

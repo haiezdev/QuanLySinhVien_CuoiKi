@@ -1,45 +1,50 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.HocPhan
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "QUẢN LÝ HỌC PHẦN";
 }
 
-<h1>Delete</h1>
+<h1 class="title">XOÁ THÔNG TIN HỌC PHẦN</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Chắc chắn xoá học phần này?</h3>
 <div>
-    <h4>HocPhan</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenHocPhan)
+        <dt class="col-sm-2">
+            Mã học phần
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaHocPhan)
+        </dd>
+        <dt class="col-sm-2">
+            Tên học phần
+        </dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TenHocPhan)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SoTinChi)
+        <dt class="col-sm-2">
+            Số tín chỉ
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SoTinChi)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaGvNavigation)
+        <dt class="col-sm-2">
+            Mã giáo viên
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MaGvNavigation.MaGv)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaKhoaNavigation)
+        <dt class="col-sm-2">
+            Khoa
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MaKhoaNavigation.MaKhoa)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="MaHocPhan" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Xoá" class="btn btn-danger" /> 
+        <a class="buttoncuston" asp-action="Index">Trở về</a>
     </form>
 </div>

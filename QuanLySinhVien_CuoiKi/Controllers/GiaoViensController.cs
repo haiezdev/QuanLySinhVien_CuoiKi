@@ -18,11 +18,27 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: GiaoViens
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.GiaoViens.Include(g => g.MaKhoaNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
+        }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<GiaoVien> giaoViens = _context.GiaoViens.Include(gv => gv.MaKhoaNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+               
+                giaoViens = giaoViens.Where(s => s.MaGv.Contains(searchTerm) || s.TenGv.Contains(searchTerm) ||
+                                            s.Email.Contains(searchTerm) ||
+                                            s.SoDienThoai.Contains(searchTerm) || s.BoMon.Contains(searchTerm) ||
+                                            s.MaKhoa.Contains(searchTerm));
+                int count = await giaoViens.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(giaoViens);
         }
 
         // GET: GiaoViens/Details/5
@@ -58,6 +74,11 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaGv,TenGv,Email,SoDienThoai,BoMon,MaKhoa")] GiaoVien giaoVien)
         {
+            if (_context.GiaoViens.Any(g => g.MaGv == giaoVien.MaGv))
+            {
+                ModelState.AddModelError("MaGv", "Mã giáo viên đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(giaoVien);
@@ -88,6 +109,39 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // POST: GiaoViens/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(string id, [Bind("MaGv,TenGv,Email,SoDienThoai,BoMon,MaKhoa")] GiaoVien giaoVien)
+        //{
+        //    if (id != giaoVien.MaGv)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(giaoVien);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!GiaoVienExists(giaoVien.MaGv))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["MaKhoa"] = new SelectList(_context.Khoas, "MaKhoa", "MaKhoa", giaoVien.MaKhoa);
+        //    return View(giaoVien);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaGv,TenGv,Email,SoDienThoai,BoMon,MaKhoa")] GiaoVien giaoVien)
@@ -101,6 +155,15 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             {
                 try
                 {
+                    // Check if the new teacher code already exists in the system and is not the current teacher
+                    var existingGiaoVien = await _context.GiaoViens.AsNoTracking().FirstOrDefaultAsync(gv => gv.MaGv == giaoVien.MaGv);
+                    if (existingGiaoVien != null && existingGiaoVien.MaGv != id)
+                    {
+                        ModelState.AddModelError("MaGv", "Mã giáo viên đã tồn tại.");
+                        ViewData["MaKhoa"] = new SelectList(_context.Khoas, "MaKhoa", "MaKhoa", giaoVien.MaKhoa);
+                        return View(giaoVien);
+                    }
+
                     _context.Update(giaoVien);
                     await _context.SaveChangesAsync();
                 }
@@ -117,9 +180,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaKhoa"] = new SelectList(_context.Khoas, "MaKhoa", "MaKhoa", giaoVien.MaKhoa);
+            ViewData["MaKhoa"] = new SelectList(_context.Khoas, "MaKhoa", "TenKhoa", giaoVien.MaKhoa);
             return View(giaoVien);
         }
+
 
         // GET: GiaoViens/Delete/5
         public async Task<IActionResult> Delete(string id)

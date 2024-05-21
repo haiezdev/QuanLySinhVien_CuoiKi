@@ -18,12 +18,34 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: HocPhans
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.HocPhans.Include(h => h.MaGvNavigation).Include(h => h.MaKhoaNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<HocPhan> hocPhans = _context.HocPhans.Include(h => h.MaKhoaNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                hocPhans = hocPhans.Where(s => s.MaHocPhan.Contains(searchTerm) || s.TenHocPhan.Contains(searchTerm) ||
+                                            s.SoTinChi.ToString().Contains(searchTerm) ||
+                                            s.MaGv.Contains(searchTerm) || s.MaKhoa.Contains(searchTerm) ||
+                                            s.MaKhoa.Contains(searchTerm));
+                int count = await hocPhans.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(hocPhans);
+        }
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.HocPhans.Include(h => h.MaGvNavigation).Include(h => h.MaKhoaNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: HocPhans/Details/5
         public async Task<IActionResult> Details(string id)
@@ -45,6 +67,7 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             return View(hocPhan);
         }
 
+
         // GET: HocPhans/Create
         public IActionResult Create()
         {
@@ -60,9 +83,14 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaHocPhan,TenHocPhan,SoTinChi,MaGv,MaKhoa")] HocPhan hocPhan)
         {
+            if (_context.HocPhans.Any(s => s.MaHocPhan == hocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaHocPhan", "Mã học phần đã tồn tại.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(hocPhan);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -99,6 +127,18 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             if (id != hocPhan.MaHocPhan)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã học phần mới nếu nó thay đổi
+            var existingHocPhan = await _context.HocPhans.AsNoTracking().FirstOrDefaultAsync(h => h.MaHocPhan == id);
+            if (existingHocPhan == null)
+            {
+                return NotFound();
+            }
+
+            if (existingHocPhan.MaHocPhan != hocPhan.MaHocPhan && _context.HocPhans.Any(h => h.MaHocPhan == hocPhan.MaHocPhan))
+            {
+                ModelState.AddModelError("MaHocPhan", "Mã học phần đã tồn tại.");
             }
 
             if (ModelState.IsValid)

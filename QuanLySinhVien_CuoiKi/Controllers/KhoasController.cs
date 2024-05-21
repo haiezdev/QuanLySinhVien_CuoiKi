@@ -18,12 +18,33 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             _context = context;
         }
 
-        // GET: Khoas
-        public async Task<IActionResult> Index()
+        public ActionResult TimKiem(string searchTerm)
         {
-            var quanLySinhVienCuoiKiContext = _context.Khoas.Include(k => k.MaTruongNavigation);
-            return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+            return RedirectToAction("Index", new { searchTerm });
         }
+
+        // GET: GiaoViens
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            IQueryable<Khoa> khoas = _context.Khoas.Include(h => h.MaTruongNavigation);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                khoas = khoas.Where(s => s.MaKhoa.Contains(searchTerm) || s.TenKhoa.Contains(searchTerm) ||
+                                            s.MaTruong.Contains(searchTerm));
+                int count = await khoas.CountAsync();
+                ViewBag.Count = count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            return View(khoas);
+        }
+
+        // GET: Khoas
+        //public async Task<IActionResult> Index()
+        //{
+        //    var quanLySinhVienCuoiKiContext = _context.Khoas.Include(k => k.MaTruongNavigation);
+        //    return View(await quanLySinhVienCuoiKiContext.ToListAsync());
+        //}
 
         // GET: Khoas/Details/5
         public async Task<IActionResult> Details(string id)
@@ -58,6 +79,10 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaKhoa,TenKhoa,MaTruong")] Khoa khoa)
         {
+            if (_context.Khoas.Any(s => s.MaKhoa == khoa.MaKhoa))
+            {
+                ModelState.AddModelError("MaKhoa", "Mã khoa đã tồn tại.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(khoa);
@@ -88,6 +113,39 @@ namespace QuanLySinhVien_CuoiKi.Controllers
         // POST: Khoas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(string id, [Bind("MaKhoa,TenKhoa,MaTruong")] Khoa khoa)
+        //{
+        //    if (id != khoa.MaKhoa)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(khoa);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!KhoaExists(khoa.MaKhoa))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["MaTruong"] = new SelectList(_context.Truongs, "MaTruong", "MaTruong", khoa.MaTruong);
+        //    return View(khoa);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("MaKhoa,TenKhoa,MaTruong")] Khoa khoa)
@@ -95,6 +153,18 @@ namespace QuanLySinhVien_CuoiKi.Controllers
             if (id != khoa.MaKhoa)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra mã khoa mới nếu nó thay đổi
+            var existingKhoa = await _context.Khoas.AsNoTracking().FirstOrDefaultAsync(k => k.MaKhoa == id);
+            if (existingKhoa == null)
+            {
+                return NotFound();
+            }
+
+            if (existingKhoa.MaKhoa != khoa.MaKhoa && _context.Khoas.Any(k => k.MaKhoa == khoa.MaKhoa))
+            {
+                ModelState.AddModelError("MaKhoa", "Mã khoa đã tồn tại.");
             }
 
             if (ModelState.IsValid)

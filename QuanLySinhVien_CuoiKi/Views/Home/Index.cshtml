@@ -1,9 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Trang chủ";
 }
+@{
+    var session = Context.Session.GetString("UserId");
+}
 
 <div class="text-center" style="background-color: #e0f7fa; padding: 40px;">
-    <h1 class="display-4" style="color: #00695c; font-weight: bold;">
-        Chào mừng bạn đến với hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
-    </h1>
+    @if (session != null)
+    {
+        <h1 class="display-4" style="color: #00695c; font-weight: bold;">
+            Chào mừng bạn đến với hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
+        </h1>
+    } else
+    {
+        <h1 class="display-4" style="color: #00695c; font-weight: bold;">
+            CHÚ Ý: Hãy đăng nhập để sử dụng <br /> hệ thống quản lý của trường Đại học Sư phạm Kỹ thuật Đà Nẵng
+        </h1>
+    }
+
+    
+
+</div>
+<div>
+    <img style="max-width: 100%;height: auto;margin-top:10px" src="https://scontent.fhan14-3.fna.fbcdn.net/v/t39.30808-6/245698396_601877187924607_8429690473257139544_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeF8vJfRnISxKQm2Giuer3dpjXdf6kQU-lWNd1_qRBT6VR7rU1L4IdeaLW4Y2lX7MxfdaYupLXdZ9bCeBWOqGLwB&_nc_ohc=GrPiSqizgakQ7kNvgErwFTU&_nc_ht=scontent.fhan14-3.fna&oh=00_AYBVl0g0unF_72fc6s5jQ6Q6RafZcuUPYpgOXqRhcvn4iQ&oe=664FFEF2" alt="Anh truong dai hoc su pham ki thuat Da Nang" />
 </div>

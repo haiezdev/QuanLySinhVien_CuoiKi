@@ -1,12 +1,11 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.LopSinhHoat
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "QUẢN LÝ LỚP SINH HOẠT";
 }
 
-<h1>Edit</h1>
+<h1 class="title">CHỈNH SỬA THÔNG TIN LỚP SINH HOẠT</h1>
 
-<h4>LopSinhHoat</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,24 +13,27 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MaLopSh" />
             <div class="form-group">
-                <label asp-for="TenLopSh" class="control-label"></label>
+                <label asp-for="MaLopSh" class="control-label">Mã lớp sinh hoạt</label>
+                <input asp-for="MaLopSh" class="form-control" readonly />
+                <span asp-validation-for="MaLopSh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenLopSh" class="control-label">Tên lớp sinh hoạt</label>
                 <input asp-for="TenLopSh" class="form-control" />
                 <span asp-validation-for="TenLopSh" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaKhoa" class="control-label"></label>
+                <label asp-for="MaKhoa" class="control-label">Mã khoa</label>
                 <select asp-for="MaKhoa" class="form-control" asp-items="ViewBag.MaKhoa"></select>
                 <span asp-validation-for="MaKhoa" class="text-danger"></span>
             </div>
+          <div class="btsubmit"></div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <a class="buttoncuston" asp-action="Index">Trở về</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

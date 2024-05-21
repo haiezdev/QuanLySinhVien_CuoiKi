@@ -1,59 +1,90 @@
 ﻿@model IEnumerable<QuanLySinhVien_CuoiKi.Models.GiaoVien>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "QUẢN LÝ GIÁO VIÊN";
 }
 
-<h1>Index</h1>
+<h1 class="title">QUẢN LÝ GIÁO VIÊN</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <p style="margin: 0;">
+        <a class="buttoncuston" asp-action="Create">Thêm mới giáo viên</a>
+    </p>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 40px;">
+        <form style="display: flex; align-items: center;" asp-action="TimKiem">
+            <div class="control" style="display: flex; align-items: center;">
+                <input name="searchTerm" placeholder="Tìm kiếm..." class="input" style="margin-right: 10px;">
+                <button class="button" style="margin-right: 10px;"><i class="mdi mdi-magnify"></i>Tìm kiếm</button>
+                <button asp-controller="GiaoViens" asp-action="Index" class="button">Làm mới</button>
+            </div>
+        </form>
+        @if (ViewBag.searchTerm != null)
+        {
+            if (ViewBag.Count == 0)
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Không có kết quả phù hợp</p>
+            }
+            else
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Có @ViewBag.Count kết quả tìm kiếm cho từ khoá "@ViewBag.searchTerm"</p>
+            }
+        }
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TenGv)
+                Mã giáo viên
+            </th>
+            <th>
+                Họ và tên
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoDienThoai)
+                SĐT
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BoMon)
+                Bộ môn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaKhoaNavigation)
+                Khoa
             </th>
-            <th></th>
+            <th>Thao tác quản lý</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenGv)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoDienThoai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BoMon)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaGv">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaGv">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaGv">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaGv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenGv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoDienThoai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BoMon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaKhoaNavigation.MaKhoa)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaGv">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-id="@item.MaGv">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaGv">Xoá</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

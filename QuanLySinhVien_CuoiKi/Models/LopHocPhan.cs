@@ -11,7 +11,7 @@ public partial class LopHocPhan
 
     public int? Diem { get; set; }
 
-    public virtual HocPhan MaHocPhanNavigation { get; set; } = null!;
+    public virtual HocPhan? MaHocPhanNavigation { get; set; } = null!;
 
-    public virtual SinhVien MaSvNavigation { get; set; } = null!;
+    public virtual SinhVien? MaSvNavigation { get; set; } = null!;
 }

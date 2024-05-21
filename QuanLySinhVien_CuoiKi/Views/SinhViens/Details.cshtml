@@ -1,7 +1,7 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.SinhVien
 
 @{
-    ViewData["Title"] = "CHI TIẾT SINH VIÊN";
+    ViewData["Title"] = "QUẢN LÝ SINH VIÊN";
 }
 
 <h1  class="title">CHI TIẾT SINH VIÊN</h1>
@@ -9,6 +9,12 @@
 <div class="formInfo" style="display:flex; justify-content:center">
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            Mã sinh viên
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaSv)
+        </dd>
         <dt class = "col-sm-2">
             Họ và tên
         </dt>

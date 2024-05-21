@@ -1,0 +1,26 @@
+﻿@model QuanLySinhVien_CuoiKi.Models.NguoiDung
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<h2 class="title">Đăng nhập</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4" style="border: 1px solid black; padding: 20px;border-radius: 10px;">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div style="margin 20px;margin: 20px;" class="form-group">
+                <label for="username">Tài khoản:</label>
+                <input type="text" id="username" name="Username" class="form-control" placeholder="Nhập tài khoản" required>
+            </div>
+            <div style="margin 20px;margin: 20px;"  class="form-group">
+                <label for="password">Mật khẩu:</label>
+                <input type="password" id="password" name="Password" class="form-control" placeholder="Nhập mật khẩu" required>
+            </div>
+            <div class="btsubmit">
+                <button class="buttoncuston" type="submit" class="btn btn-primary">Đăng nhập</button>
+                <a class="buttoncuston" style="margin-left: 10px" asp-controller="Home" asp-action="Index">Trở lại</a>
+            </div>
+        </form>
+    </div>
+</div>

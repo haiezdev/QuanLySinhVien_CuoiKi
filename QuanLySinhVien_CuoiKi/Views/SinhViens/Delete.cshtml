@@ -1,15 +1,21 @@
 ﻿@model QuanLySinhVien_CuoiKi.Models.SinhVien
 
 @{
-    ViewData["Title"] = "XOÁ SINH VIÊN";
+    ViewData["Title"] = "QUẢN LÝ SINH VIÊN";
 }
 
-<h1 class="title"> XOÁ SINH VIÊN</h1>
+<h1 class="title"> XOÁ THÔNG TIN SINH VIÊN</h1>
 
-<h3>Chắc chắn muốn xoá sinh viên này?</h3>
+<h3>Chắc chắn muốn xoá thông tin về sinh viên này?</h3>
 <div>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            Mã sinh viên
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaSv)
+        </dd>
         <dt class="col-sm-2">
             Họ và tên
         </dt>

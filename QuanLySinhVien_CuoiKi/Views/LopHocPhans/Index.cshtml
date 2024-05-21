@@ -4,11 +4,32 @@
     ViewData["Title"] = "QUẢN LÝ LỚP HỌC PHẦN";
 }
 
-<h1>QUẢN LÝ LỚP HỌC PHẦN</h1>
-
-<p>
-    <a style="padding:5px;color: black; font-size: large;text-decoration: none; border:2px solid black" asp-action="Create">Thêm lớp học phần</a>
-</p>
+<h1 class="title">QUẢN LÝ LỚP HỌC PHẦN</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <p style="margin: 0;">
+        <a class="buttoncuston" asp-action="Create">Thêm mới lớp học phần</a>
+    </p>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 40px;">
+        <form style="display: flex; align-items: center;" asp-action="TimKiem">
+            <div class="control" style="display: flex; align-items: center;">
+                <input name="searchTerm" placeholder="Tìm kiếm..." class="input" style="margin-right: 10px;">
+                <button class="button" style="margin-right: 10px;"><i class="mdi mdi-magnify"></i>Tìm kiếm</button>
+                <button asp-controller="LopHocPhans" asp-action="Index" class="button">Làm mới</button>
+            </div>
+        </form>
+        @if (ViewBag.searchTerm != null)
+        {
+            if (ViewBag.Count == 0)
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Không có kết quả phù hợp</p>
+            }
+            else
+            {
+                <p style="margin: 0; margin-top: 10px;color:red">Có @ViewBag.Count kết quả tìm kiếm cho từ khoá "@ViewBag.searchTerm"</p>
+            }
+        }
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -43,9 +64,9 @@
                    @*  <a asp-action="Edit" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Edit</a> |
                     <a asp-action="Details" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Details</a> |
                     <a asp-action="Delete" asp-route-id="@($"{item.MaSv}&{item.MaHocPhan}")">Delete</a> *@
-                    <a asp-action="Edit" asp-route-maSv="@($"{item.MaSv}" )" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Edit</a> |
-                    <a asp-action="Details" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Details</a> |
-                    <a asp-action="Delete" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Delete</a>
+                    <a asp-action="Details" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-maSv="@($"{item.MaSv}" )" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Sửa</a> |
+                    <a asp-action="Delete" asp-route-maSv="@($"{item.MaSv}")" asp-route-maHocPhan="@($"{item.MaHocPhan}")">Xoá</a>
                 </td>
             </tr>
         }

@@ -29,6 +29,8 @@ public partial class QuanLySinhVienCuoiKiContext : DbContext
 
     public virtual DbSet<Truong> Truongs { get; set; }
 
+    public virtual DbSet<NguoiDung> NguoiDungs { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=HAIHOINACH\\SQLEXPRESS;Initial Catalog=QuanLySinhVien_CuoiKi;User ID=sa;Password=sa;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
@@ -244,6 +246,33 @@ public partial class QuanLySinhVienCuoiKiContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("ten_truong");
         });
+
+        modelBuilder.Entity<NguoiDung>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("PK_nguoidung");
+
+            // Thiết lập tên bảng
+            entity.ToTable("nguoidung");
+
+            // Thiết lập thuộc tính Id
+            entity.Property(e => e.UserId)
+                .HasColumnName("id")
+                .IsRequired(); // Yêu cầu trường này không được null
+
+            // Thiết lập thuộc tính Username
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("username")
+                .IsRequired();
+
+            // Thiết lập thuộc tính Password
+            entity.Property(e => e.Password)
+                .HasMaxLength(100)
+                .HasColumnName("password")
+                .IsRequired(); // Yêu cầu trường này không được null
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
