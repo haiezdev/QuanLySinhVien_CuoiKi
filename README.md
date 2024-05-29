@@ -1,3 +1,5 @@
+#Họ và tên: Nguyễn Thanh Hải, Msv: 21115053120212, Lớp học phần: 223LTC01
+
 # QuanLySinhVien_CuoiKy
 
 ## Giới thiệu
